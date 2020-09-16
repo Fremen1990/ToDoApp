@@ -12,8 +12,6 @@ const Task = (props) => {
     const { text, date, id, active, important, finishDate } = props.task;
 
     if (active) {
-
-
         return (
             <div>
                 <p>

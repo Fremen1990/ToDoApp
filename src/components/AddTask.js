@@ -18,8 +18,10 @@ class AddTask extends Component {
     }
 
     handleCheckBox = (e) => {
+        console.log("important")
         this.setState({
             checked: e.target.checked
+
         })
     }
 
@@ -30,14 +32,29 @@ class AddTask extends Component {
     }
 
     handleClick = () => {
-        console.log("add")
+        // console.log("add")
+
+        const { text, checked, date } = this.state
+        if (text.length > 2) {
+            const add = this.props.add(text, date, checked)
+            if (add) {
+                this.setState({
+                    text: '',
+                    checked: false,
+                    date: this.minDate,
+                })
+            }
+        } else {
+            alert("task name too short")
+        }
+
     }
 
     render() {
         let maxDate = this.minDate.slice(0, 4) * 1 + 1// multiply x1 to convert to number +1 year
-        console.log(maxDate)
+        // console.log(maxDate)
         maxDate = maxDate + "-12-31" // final 2021-12-31
-        console.log(maxDate)
+        // console.log(maxDate)
 
         return (
             <div className="form">

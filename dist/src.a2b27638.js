@@ -28433,6 +28433,8 @@ var AddTask = /*#__PURE__*/function (_Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleCheckBox", function (e) {
+      console.log("important");
+
       _this.setState({
         checked: e.target.checked
       });
@@ -28445,7 +28447,25 @@ var AddTask = /*#__PURE__*/function (_Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleClick", function () {
-      console.log("add");
+      // console.log("add")
+      var _this$state = _this.state,
+          text = _this$state.text,
+          checked = _this$state.checked,
+          date = _this$state.date;
+
+      if (text.length > 2) {
+        var add = _this.props.add(text, date, checked);
+
+        if (add) {
+          _this.setState({
+            text: '',
+            checked: false,
+            date: _this.minDate
+          });
+        }
+      } else {
+        alert("task name too short");
+      }
     });
 
     return _this;
@@ -28455,11 +28475,11 @@ var AddTask = /*#__PURE__*/function (_Component) {
     key: "render",
     value: function render() {
       var maxDate = this.minDate.slice(0, 4) * 1 + 1; // multiply x1 to convert to number +1 year
+      // console.log(maxDate)
 
-      console.log(maxDate);
       maxDate = maxDate + "-12-31"; // final 2021-12-31
+      // console.log(maxDate)
 
-      console.log(maxDate);
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "form"
       }, /*#__PURE__*/_react.default.createElement("input", {
@@ -28562,7 +28582,33 @@ var TaskList = function TaskList(props) {
   var done = props.tasks.filter(function (task) {
     return !task.active;
   });
-  console.log(active, done);
+
+  if (done.length >= 2) {
+    done.sort(function (a, b) {
+      return a.finishDate - b.finishDate;
+    }); // alternative sort method  - short version
+  } // done.sort((a, b) => {  // alternative sort method full version
+  //     if (a.finishDate > b.finishDate) {
+  //         return -1
+  //     }
+  //     if (a.finishDate < b.finishDate) {
+  //         return 1
+  //     }
+  //     return 0
+  // })
+
+
+  if (active.length >= 2) {
+    active.sort(function (a, b) {
+      a = a.text.toLowerCase();
+      b = b.text.toLowerCase();
+      if (a < b) return -1;
+      if (a > b) return 1;
+      return 0;
+    });
+  } // console.log(active, done)
+
+
   var activeTasks = active.map(function (task) {
     return /*#__PURE__*/_react.default.createElement(_Task.default, {
       key: task.id,
@@ -28668,6 +28714,8 @@ var App = /*#__PURE__*/function (_Component) {
 
     _this = _super.call.apply(_super, [this].concat(args));
 
+    _defineProperty(_assertThisInitialized(_this), "counter", 7);
+
     _defineProperty(_assertThisInitialized(_this), "state", {
       tasks: [{
         id: 0,
@@ -28684,35 +28732,35 @@ var App = /*#__PURE__*/function (_Component) {
         active: true,
         finishDate: null
       }, {
-        id: 3,
-        text: "Kupa",
+        id: 2,
+        text: "kupa",
         date: "2018-09-15",
         important: true,
         active: false,
         finishDate: null
       }, {
-        id: 4,
-        text: "Siku",
+        id: 3,
+        text: "siku",
         date: "2018-09-15",
         important: false,
         active: true,
         finishDate: null
       }, {
-        id: 5,
-        text: "Moto",
+        id: 4,
+        text: "moto",
         date: "2018-09-15",
         important: true,
         active: false,
         finishDate: null
       }, {
-        id: 6,
-        text: "Siłka",
+        id: 5,
+        text: "siłka",
         date: "2018-09-15",
         important: true,
         active: true,
         finishDate: null
       }, {
-        id: 7,
+        id: 6,
         text: "taparapa",
         date: "2018-09-15",
         important: false,
@@ -28759,6 +28807,34 @@ var App = /*#__PURE__*/function (_Component) {
       });
     });
 
+    _defineProperty(_assertThisInitialized(_this), "addTask", function (text, date, importnat) {
+      // console.log("object added")
+      var task = {
+        id: _this.counter,
+        // last id
+        text: text,
+        // text from input
+        date: date,
+        // date from input
+        important: important,
+        // checkbox data
+        active: true,
+        // active true 
+        finishDate: null // finish date null
+
+      };
+      _this.counter++;
+      console.log(task, _this.counter);
+
+      _this.setState(function (prevState) {
+        return {
+          tasks: [].concat(_toConsumableArray(prevState.tasks), [task])
+        };
+      });
+
+      return true;
+    });
+
     return _this;
   }
 
@@ -28767,7 +28843,9 @@ var App = /*#__PURE__*/function (_Component) {
     value: function render() {
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "App"
-      }, /*#__PURE__*/_react.default.createElement("h1", null, "TO DO APP"), /*#__PURE__*/_react.default.createElement(_AddTask.default, null), /*#__PURE__*/_react.default.createElement(_TaskList.default, {
+      }, /*#__PURE__*/_react.default.createElement("h1", null, "TO DO APP"), /*#__PURE__*/_react.default.createElement(_AddTask.default, {
+        add: this.addTask
+      }), /*#__PURE__*/_react.default.createElement(_TaskList.default, {
         tasks: this.state.tasks,
         delete: this.deleteTask,
         change: this.changeTaskStatus
@@ -28822,7 +28900,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35721" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33959" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -6,6 +6,8 @@ import Task from "./Task"
 
 class App extends Component {
 
+    counter = 7
+
     state = {
         tasks: [
             {
@@ -25,39 +27,39 @@ class App extends Component {
                 finishDate: null,
             },
             {
-                id: 3,
-                text: "Kupa",
+                id: 2,
+                text: "kupa",
                 date: "2018-09-15",
                 important: true,
                 active: false,
                 finishDate: null,
             },
             {
-                id: 4,
-                text: "Siku",
+                id: 3,
+                text: "siku",
                 date: "2018-09-15",
                 important: false,
                 active: true,
                 finishDate: null,
             },
             {
-                id: 5,
-                text: "Moto",
+                id: 4,
+                text: "moto",
                 date: "2018-09-15",
                 important: true,
                 active: false,
                 finishDate: null,
             },
             {
-                id: 6,
-                text: "Siłka",
+                id: 5,
+                text: "siłka",
                 date: "2018-09-15",
                 important: true,
                 active: true,
                 finishDate: null,
             },
             {
-                id: 7,
+                id: 6,
                 text: "taparapa",
                 date: "2018-09-15",
                 important: false,
@@ -105,16 +107,33 @@ class App extends Component {
 
     }
 
+    addTask = (text, date, importnat) => {
+        // console.log("object added")
+        const task =
+        {
+            id: this.counter, // last id
+            text: text, // text from input
+            date: date, // date from input
+            important: important, // checkbox data
+            active: true, // active true 
+            finishDate: null, // finish date null
+        }
+        this.counter++;
+        console.log(task, this.counter)
+        this.setState(prevState => ({
+            tasks: [...prevState.tasks, task]
+        }))
+        return true
+    }
+
     render() {
         return (
             <div className="App">
                 <h1>TO DO APP</h1>
-                <AddTask />
+                <AddTask add={this.addTask} />
                 <TaskList tasks={this.state.tasks} delete={this.deleteTask} change={this.changeTaskStatus} />
             </div>
         )
     }
 }
-
-
 export default App;
